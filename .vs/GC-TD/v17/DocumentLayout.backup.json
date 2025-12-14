@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "D:\\proje\\deneme1\\GC-TD\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\proje\\deneme1\\GC-TD\\Assets\\Scripts\\Tower\\TowerLevelSystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\Tower\\TowerLevelSystem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\proje\\deneme1\\GC-TD\\Assets\\Scripts\\GameManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\GameManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -19,14 +19,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "TowerLevelSystem.cs",
-              "DocumentMoniker": "D:\\proje\\deneme1\\GC-TD\\Assets\\Scripts\\Tower\\TowerLevelSystem.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Tower\\TowerLevelSystem.cs",
-              "ToolTip": "D:\\proje\\deneme1\\GC-TD\\Assets\\Scripts\\Tower\\TowerLevelSystem.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Tower\\TowerLevelSystem.cs",
-              "ViewState": "AgIAADwAAAAAAAAAAAAAAE4AAAAtAAAAAAAAAA==",
+              "Title": "GameManager.cs",
+              "DocumentMoniker": "D:\\proje\\deneme1\\GC-TD\\Assets\\Scripts\\GameManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\GameManager.cs",
+              "ToolTip": "D:\\proje\\deneme1\\GC-TD\\Assets\\Scripts\\GameManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\GameManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-14T11:03:15.794Z",
+              "WhenOpened": "2025-12-14T13:55:57.534Z",
               "EditorCaption": ""
             }
           ]

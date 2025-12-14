@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerData
   towerName: Mage
   range: 2
-  shootInterval: 2.2
+  shootInterval: 2.7
   projectileSpeed: 35
   projectileDuration: 2
-  projectileSize: 5
-  damage: 45
-  cost: 100
+  projectileSize: 3
+  damage: 40
+  cost: 130
   sprite: {fileID: -2650555530357268278, guid: 66fdc9ee6b27d42ee8613c75ea83241b, type: 3}
+  buildLimit: 10
   prefab: {fileID: 5131458506895818422, guid: 5681be72730d44a0aaf90aa21dd80992, type: 3}

@@ -14,6 +14,8 @@ public class TowerData : ScriptableObject
 
     public int cost;
     public Sprite sprite;
+    [Header("Tower Build limit")]
+    public int buildLimit = 0;
 
     public GameObject prefab;
 }

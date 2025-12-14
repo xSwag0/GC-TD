@@ -9,12 +9,17 @@ public class TowerCard : MonoBehaviour
     [SerializeField] private TMP_Text costText;
     [SerializeField] private TMP_Text nameText;
 
+    private Button _button;
     private TowerData _towerData;
     public static event Action<TowerData> OnTowerSelection;
 
+    private void Awake()
+    {
+        _button = GetComponent<Button>();
+    }
+
     private void OnEnable()
     {
-        // Kule sayýsý deðiþince UpdateCostUI çalýþsýn
         Platform.OnTowerCountChanged += UpdateCostUI;
     }
 
@@ -29,23 +34,37 @@ public class TowerCard : MonoBehaviour
         towerImage.sprite = data.sprite;
         nameText.text = data.towerName;
 
-        // Fiyatý ekrana yazdýr
         UpdateCostUI();
     }
 
-    // Fiyatý hesaplayýp ekrana yazan yeni fonksiyon
     private void UpdateCostUI()
     {
         if (_towerData != null)
         {
-            // Platform sýnýfýndaki yeni hesaplama metodunu kullanýyoruz
             int currentCost = Platform.GetTowerCost(_towerData);
-            costText.text = currentCost.ToString();
+
+            bool limitReached = Platform.IsLimitReached(_towerData);
+
+            if (limitReached)
+            {
+                costText.text = "MAX";
+                costText.color = Color.red;
+                if (_button) _button.interactable = false;
+            }
+            else
+            {
+                costText.text = currentCost.ToString();
+                costText.color = Color.white;
+                if (_button) _button.interactable = true;
+            }
         }
     }
 
     public void PlaceTower()
     {
-        OnTowerSelection?.Invoke(_towerData);
+        if (!Platform.IsLimitReached(_towerData))
+        {
+            OnTowerSelection?.Invoke(_towerData);
+        }
     }
 }

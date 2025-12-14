@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
@@ -11,8 +12,12 @@ public class Platform : MonoBehaviour
     [SerializeField] private LayerMask platformLayerMask;
     public static bool sidePanelOpen { get; set; } = false;
 
+    // GENEL toplam kule sayısı
     private static int towerCount = 0;
-    private static int costIncreaseAmount = 20;
+    private static int costIncreaseAmount = 30;
+
+    // Kule türüne göre sayıları tutan liste
+    private static Dictionary<TowerData, int> _towerTypeCounts = new Dictionary<TowerData, int>();
 
     public bool hasTower = false;
     private GameObject _builtTower;
@@ -25,14 +30,22 @@ public class Platform : MonoBehaviour
         return data.cost + (towerCount * costIncreaseAmount);
     }
 
+    public static int GetSpecificTowerCount(TowerData data)
+    {
+        if (_towerTypeCounts.ContainsKey(data))
+            return _towerTypeCounts[data];
+        return 0;
+    }
+
+    public static bool IsLimitReached(TowerData data)
+    {
+        if (data.buildLimit <= 0) return false;
+        return GetSpecificTowerCount(data) >= data.buildLimit;
+    }
+
     private void Update()
     {
-        // sidePanelOpen kontrolünü buradan SİLDİK.
-        // Sadece oyun duraklatılmışsa tıklamayı engelle.
         if (UIControl._isPaused) return;
-
-        // Eğer fare şu an bir UI elemanının (Panel, Buton vb.) üzerindeyse,
-        // platforma tıklamayı engelle. Bu sayede butona basarken kule seçmezsin.
         if (EventSystem.current.IsPointerOverGameObject()) return;
 
         if (Mouse.current.leftButton.wasPressedThisFrame)
@@ -45,8 +58,6 @@ public class Platform : MonoBehaviour
                 Platform platform = raycastHit.collider.GetComponent<Platform>();
                 if (platform != null)
                 {
-                    // Bu olay tetiklendiğinde UIControl devreye girecek
-                    // ve _currentPlatform'u yenileyip fiyatları güncelleyecek.
                     OnPlatformClicked?.Invoke(platform);
                 }
             }
@@ -55,20 +66,27 @@ public class Platform : MonoBehaviour
 
     public void PlaceTower(TowerData data)
     {
-        // 1. Önce maliyeti hesapla
+        // 1. Limit Kontrolü
+        if (IsLimitReached(data)) return;
+
+        // 2. Maliyeti hesapla
         int actualCost = GetTowerCost(data);
 
-        // 2. Kuleyi yarat
+        // 3. Kuleyi yarat
         _builtTower = Instantiate(data.prefab, transform.position, Quaternion.identity, transform);
         _builtTowerData = data;
         hasTower = true;
 
-        // 3. Kuleye ne kadara mal olduğunu bildir (İade sistemi için kritik düzeltme)
         TowerLevelSystem levelSystem = _builtTower.GetComponent<TowerLevelSystem>();
         if (levelSystem != null)
         {
             levelSystem.SetInitialCost(actualCost);
         }
+
+        // Tür sayacını artır
+        if (!_towerTypeCounts.ContainsKey(data))
+            _towerTypeCounts[data] = 0;
+        _towerTypeCounts[data]++;
 
         towerCount++;
         OnTowerCountChanged?.Invoke();
@@ -79,17 +97,14 @@ public class Platform : MonoBehaviour
         if (_builtTower != null)
         {
             int refundAmount = 0;
-
             TowerLevelSystem levelSys = _builtTower.GetComponent<TowerLevelSystem>();
 
             if (levelSys != null)
             {
-                // Artık levelSys gerçek harcanan parayı bildiği için doğru iade yapacak
                 refundAmount = levelSys.GetRefundAmount();
             }
             else
             {
-                // Yedek plan (Eğer level sistemi yoksa)
                 refundAmount = Mathf.RoundToInt(_builtTowerData.cost * 0.5f);
             }
 
@@ -98,9 +113,16 @@ public class Platform : MonoBehaviour
                 GameManager.Instance.AddResources(refundAmount);
             }
 
+            // Tür sayacını azalt
+            if (_builtTowerData != null && _towerTypeCounts.ContainsKey(_builtTowerData))
+            {
+                _towerTypeCounts[_builtTowerData]--;
+            }
+
             Destroy(_builtTower);
             hasTower = false;
             _builtTower = null;
+            _builtTowerData = null;
 
             towerCount--;
             OnTowerCountChanged?.Invoke();
@@ -110,6 +132,7 @@ public class Platform : MonoBehaviour
     public static void ResetTowerCount()
     {
         towerCount = 0;
+        _towerTypeCounts.Clear();
         OnTowerCountChanged?.Invoke();
     }
 }
