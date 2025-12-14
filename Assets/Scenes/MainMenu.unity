@@ -2314,7 +2314,7 @@ MonoBehaviour:
     low damage\n\n         The Cannon has low range, mid speed and \n         mid
     cost but good damage.\n\n         The Mage has mid range, low speed and \n        
     high cost but has very good damage.\n\n         The game starts once you press
-    X1, X2, X3 \n         or X10 buttons and ends once your health \n         is
+    X0.5, X1, X2 \n         or X10 buttons and ends once your health \n         is
     down to 0."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
