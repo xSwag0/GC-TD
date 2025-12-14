@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 478c742cb5aaf484d953f5598fe8cce3, type: 3}
+  m_Name: Enemy_Goblin
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  hp: 23
+  damage: 3
+  moveSpeed: 2
+  generalValue: 15

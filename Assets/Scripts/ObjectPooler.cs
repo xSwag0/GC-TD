@@ -7,8 +7,12 @@ public class ObjectPooler : MonoBehaviour
     [SerializeField] private int amountToSpawn = 7;
     private List<GameObject> _pool;
     
+    private GameObject _poolContainer;
+    
     void Start()
     {
+        _poolContainer = new GameObject($"Pool_{gameObject.name}");
+        
         _pool = new List<GameObject>();
         for (int i = 0; i < amountToSpawn; i++)
         {
@@ -18,7 +22,7 @@ public class ObjectPooler : MonoBehaviour
 
     private GameObject CreateNewObject()
     {
-        GameObject spawnedObject = Instantiate(prefab, transform);
+        GameObject spawnedObject = Instantiate(prefab, _poolContainer.transform);
         spawnedObject.SetActive(false);
         _pool.Add(spawnedObject);
         return spawnedObject;

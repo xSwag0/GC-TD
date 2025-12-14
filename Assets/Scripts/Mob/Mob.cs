@@ -4,29 +4,64 @@ using UnityEngine;
 public class Mob : MonoBehaviour
 {
     [SerializeField] private EnemyData enemyData;
+    public EnemyData Data => enemyData;
+
     public static event Action<EnemyData> OnBreach;
-    
+    public static event Action<Mob> OnDeath;
+
     private Path _currentPath;
-    
+
     private Vector3 _targetPosition;
-    private int _currentWaypoint = 0;
+    private int _currentWaypoint;
+    [Header("Enemy hp value")]
+    [SerializeField] private float _hp;
+
+    private bool _isGone = false;
 
     private void Awake()
     {
-        _currentPath = GameObject.Find("Path_Map1").GetComponent<Path>();    
+        // Path objesinin adının sahnede "Path_Map1" olduğundan emin ol veya null check ekle
+        GameObject pathObj = GameObject.Find("Path_Map1");
+        if (pathObj != null)
+        {
+            _currentPath = pathObj.GetComponent<Path>();
+        }
     }
-    
+
     private void OnEnable()
     {
-        _currentWaypoint = 0;
-        _targetPosition = _currentPath.GetWaypointPosition(_currentWaypoint);
+        // Can eşitleme kodunu buradan kaldırdık.
+        // _hp = enemyData.hp;  <-- SİLİNEN SATIR
+
+        if (_currentPath != null) // Hata almamak için kontrol
+        {
+            _currentWaypoint = 0;
+            _targetPosition = _currentPath.GetWaypointPosition(_currentWaypoint);
+        }
     }
-    
+
+    // ... Update ve TakeDamage kısımları aynı kalacak ...
+
+    // Initialize fonksiyonu Spawner tarafından çağrıldığı için canı burada belirliyoruz
+    public void Initialize(float hpMultiplier)
+    {
+        _isGone = false;
+
+        // Can değeri burada hesaplanıyor ve OnEnable bunu ezmiyor
+        _hp = enemyData.hp * hpMultiplier;
+    }
+
+    // Update ve TakeDamage fonksiyonlarını olduğu gibi koruyabilirsin.
     void Update()
     {
+        if (_isGone || _currentPath == null) return;
+
+        Vector3 movementDirection = _targetPosition - transform.position;
+        float angle = Mathf.Atan2(movementDirection.y, movementDirection.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
+
         transform.position = Vector3.MoveTowards(transform.position, _targetPosition, enemyData.moveSpeed * Time.deltaTime);
-        
-        float distanceToWaypoint = (transform.position - _targetPosition).magnitude;
+        float distanceToWaypoint = (movementDirection).magnitude;
         if (distanceToWaypoint <= 0.1f)
         {
             if (_currentWaypoint < _currentPath.waypoints.Length - 1)
@@ -36,10 +71,25 @@ public class Mob : MonoBehaviour
             }
             else
             {
+                _isGone = true;
                 OnBreach?.Invoke(enemyData);
                 gameObject.SetActive(false);
             }
-            
+        }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        if (_isGone) return;
+
+        _hp -= damage;
+        _hp = Mathf.Max(_hp, 0);
+
+        if (_hp <= 0)
+        {
+            _isGone = true;
+            OnDeath?.Invoke(this);
+            gameObject.SetActive(false);
         }
     }
 }

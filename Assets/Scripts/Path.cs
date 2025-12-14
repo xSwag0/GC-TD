@@ -14,7 +14,7 @@ public class Path : MonoBehaviour
     {
         if(waypoints.Length > 0)
         {
-            for (int i = 0; i < waypoints.Length; i++)
+            for (int i = 0; i < waypoints.Length - 1; i++)
             {
                 if (i < waypoints.Length)
                 {

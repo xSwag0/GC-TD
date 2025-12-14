@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d02fa914ad2f4e45b466bd8583b1db6, type: 3}
+  m_Name: Tower_Mage
+  m_EditorClassIdentifier: Assembly-CSharp::TowerData
+  towerName: Mage
+  range: 2
+  shootInterval: 2.2
+  projectileSpeed: 35
+  projectileDuration: 2
+  projectileSize: 5
+  damage: 45
+  cost: 100
+  sprite: {fileID: -2650555530357268278, guid: 66fdc9ee6b27d42ee8613c75ea83241b, type: 3}
+  prefab: {fileID: 5131458506895818422, guid: 5681be72730d44a0aaf90aa21dd80992, type: 3}
