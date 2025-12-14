@@ -23,7 +23,11 @@ public class MainMenu : MonoBehaviour
         {
             resultText.text = "invalid Input";
         }
-        else 
+        else if( name.Length >= 20)
+        {
+            resultText.text = "invalid Input";
+        }
+        else
         {
             PlayerPrefs.SetString("PlayerName", name);
             playgame();

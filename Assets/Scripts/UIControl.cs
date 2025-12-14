@@ -243,6 +243,7 @@ public class UIControl : MonoBehaviour
     public void GoToMainMenu()
     {
         GameManager.Instance.SetTimeScale(1f);
+        Platform.ResetTowerCount();
         SceneManager.LoadScene("MainMenu");
     }
 

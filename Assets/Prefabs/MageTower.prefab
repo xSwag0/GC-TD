@@ -177,7 +177,7 @@ MonoBehaviour:
   currentDamage: 0
   currentShootInterval: 0
   currentRange: 0
-  baseUpgradeCost: 200
+  baseUpgradeCost: 350
   damageMultiplier: 1.3
   speedMultiplier: 0.88
   sellRefundRate: 0.5

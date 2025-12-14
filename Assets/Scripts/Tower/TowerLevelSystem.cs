@@ -76,7 +76,7 @@ public class TowerLevelSystem : MonoBehaviour
 
     public int CalculateCost()
     {
-        return baseUpgradeCost * currentLevel;
+        return baseUpgradeCost * (int)Mathf.Pow(2f,currentLevel-1);
     }
 
     public int GetRefundAmount()
