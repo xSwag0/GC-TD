@@ -128,8 +128,16 @@ public class Spawner : MonoBehaviour
                 GameObject spawnedObject = currentPool.GetObjectFromPool();
                 spawnedObject.transform.position = transform.position;
 
-                float hpMultiplier = 1f + (_waveCounter * 0.4f);
-                Mob mob = spawnedObject.GetComponent<Mob>();
+                float hpMultiplier = 0;
+                if(_waveCounter <= 14)
+                {
+                    hpMultiplier = 1f + (_waveCounter * 0.4f);
+                }
+                else
+                {
+                    hpMultiplier = 1f + (_waveCounter * 1.3f);
+                }
+                    Mob mob = spawnedObject.GetComponent<Mob>();
                 if (mob != null) mob.Initialize(hpMultiplier);
 
                 spawnedObject.SetActive(true);
