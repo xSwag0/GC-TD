@@ -14,7 +14,7 @@ public class Platform : MonoBehaviour
 
     // GENEL toplam kule sayısı
     private static int towerCount = 0;
-    private static int costIncreaseAmount = 30;
+    private static int costIncreaseAmount = 25;
 
     // Kule türüne göre sayıları tutan liste
     private static Dictionary<TowerData, int> _towerTypeCounts = new Dictionary<TowerData, int>();

@@ -15,4 +15,4 @@ MonoBehaviour:
   hp: 43
   damage: 5
   moveSpeed: 1
-  generalValue: 16
+  generalValue: 21

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerData
   towerName: Mage
   range: 2
-  shootInterval: 2.7
+  shootInterval: 2.6
   projectileSpeed: 35
   projectileDuration: 2
   projectileSize: 3

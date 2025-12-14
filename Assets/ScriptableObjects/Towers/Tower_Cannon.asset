@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Tower_Cannon
   m_EditorClassIdentifier: Assembly-CSharp::TowerData
   towerName: Cannon
-  range: 1.8
-  shootInterval: 1.25
+  range: 1.9
+  shootInterval: 1.125
   projectileSpeed: 35
   projectileDuration: 3
   projectileSize: 4.5
-  damage: 10
+  damage: 11
   cost: 75
   sprite: {fileID: 2829232388215122354, guid: e08a6519644d644328c6fb2a4f34393e, type: 3}
   buildLimit: 0

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 478c742cb5aaf484d953f5598fe8cce3, type: 3}
   m_Name: Enemy_Goblin
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  hp: 23
+  hp: 21
   damage: 3
   moveSpeed: 2
-  generalValue: 7
+  generalValue: 9
