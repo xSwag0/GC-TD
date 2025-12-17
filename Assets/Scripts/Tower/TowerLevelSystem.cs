@@ -6,8 +6,8 @@ public class TowerLevelSystem : MonoBehaviour
 
     [Header("Durum")]
     public int currentLevel = 1;
-    public int maxLevel = 4;
-    public int totalMoneySpent = 0; // Ýade hesabý için
+    public int maxLevel = 20;
+    public int totalMoneySpent = 0; // ï¿½ade hesabï¿½ iï¿½in
 
     [Header("Stats")]
     public float currentDamage;
@@ -20,7 +20,7 @@ public class TowerLevelSystem : MonoBehaviour
     public float speedMultiplier = 0.9f;
     public float sellRefundRate = 0.5f;
 
-    // Týklama Spam Korumasý
+    // Tï¿½klama Spam Korumasï¿½
     private float _lastUpgradeTime;
     private const float UpgradeCooldown = 0.5f;
 
@@ -42,23 +42,23 @@ public class TowerLevelSystem : MonoBehaviour
 
     public void TryUpgradeTower()
     {
-        // 1. Spam Kontrolü (Oyun duraklatýlsa bile çalýþmasý için unscaledTime kullandýk)
+        // 1. Spam Kontrolï¿½ (Oyun duraklatï¿½lsa bile ï¿½alï¿½ï¿½masï¿½ iï¿½in unscaledTime kullandï¿½k)
         if (Time.unscaledTime - _lastUpgradeTime < UpgradeCooldown) return;
 
-        // 2. Max Level Kontrolü
+        // 2. Max Level Kontrolï¿½
         if (currentLevel >= maxLevel) return;
 
-        // 3. Maliyet Hesabý
+        // 3. Maliyet Hesabï¿½
         int cost = CalculateCost();
 
-        // 4. Para ve Yükseltme Ýþlemi
+        // 4. Para ve Yï¿½kseltme ï¿½ï¿½lemi
         if (GameManager.Instance != null && GameManager.Instance.Resources >= cost)
         {
             GameManager.Instance.SpentResources(cost);
 
             PerformUpgrade(cost);
 
-            // Son iþlem zamanýný güncelle
+            // Son iï¿½lem zamanï¿½nï¿½ gï¿½ncelle
             _lastUpgradeTime = Time.unscaledTime;
 
             
@@ -68,7 +68,7 @@ public class TowerLevelSystem : MonoBehaviour
     void PerformUpgrade(int costSpent)
     {
         currentLevel++;
-        totalMoneySpent += costSpent; // Harcanan parayý iade havuzuna ekle
+        totalMoneySpent += costSpent; // Harcanan parayï¿½ iade havuzuna ekle
 
         currentDamage *= damageMultiplier;
         currentShootInterval *= speedMultiplier;
@@ -76,7 +76,8 @@ public class TowerLevelSystem : MonoBehaviour
 
     public int CalculateCost()
     {
-        return baseUpgradeCost * (int)Mathf.Pow(2f,currentLevel-1);
+        // basecost + 100 * currentLevel
+        return baseUpgradeCost + (100 * currentLevel);
     }
 
     public int GetRefundAmount()

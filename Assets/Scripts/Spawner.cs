@@ -89,6 +89,13 @@ public class Spawner : MonoBehaviour
             }
             else if (_spawnedEnemies >= _currentWaveEnemies.Count && _spawnedBreaches >= _currentWaveEnemies.Count)
             {
+                // Wave sonu ödülü: wave * 100 altın
+                int waveReward = _waveCounter * 100;
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.AddResources(waveReward);
+                }
+
                 _isOnCooldown = true;
                 _waitingTimer = _cooldownTime;
             }
