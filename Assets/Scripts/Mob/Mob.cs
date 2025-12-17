@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Mob : MonoBehaviour
 {
@@ -15,6 +16,10 @@ public class Mob : MonoBehaviour
     private int _currentWaypoint;
     [Header("Enemy hp value")]
     [SerializeField] private float _hp;
+    private float _maxHp;
+
+    [Header("Health Bar")]
+    [SerializeField] private Image healthBarFill;
 
     private bool _isGone = false;
 
@@ -48,7 +53,11 @@ public class Mob : MonoBehaviour
         _isGone = false;
 
         // Can değeri burada hesaplanıyor ve OnEnable bunu ezmiyor
-        _hp = enemyData.hp * hpMultiplier;
+        _maxHp = enemyData.hp * hpMultiplier;
+        _hp = _maxHp;
+
+        // Health bar'ı full yap
+        UpdateHealthBar();
     }
 
     // Update ve TakeDamage fonksiyonlarını olduğu gibi koruyabilirsin.
@@ -85,11 +94,22 @@ public class Mob : MonoBehaviour
         _hp -= damage;
         _hp = Mathf.Max(_hp, 0);
 
+        // Health bar'ı güncelle
+        UpdateHealthBar();
+
         if (_hp <= 0)
         {
             _isGone = true;
             OnDeath?.Invoke(this);
             gameObject.SetActive(false);
+        }
+    }
+
+    private void UpdateHealthBar()
+    {
+        if (healthBarFill != null && _maxHp > 0)
+        {
+            healthBarFill.fillAmount = _hp / _maxHp;
         }
     }
 }
