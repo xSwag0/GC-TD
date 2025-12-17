@@ -38,6 +38,10 @@ public class UIControl : MonoBehaviour
     [SerializeField] private TMP_Text upgradeButtonText;
     private TowerData _builtTowerData;
 
+    [Header("Targeting Settings")]
+    [SerializeField] private Button targetingButton;
+    [SerializeField] private TMP_Text targetingButtonText;
+
     private void OnEnable()
     {
         Spawner.OnWaveChange += UpdateWaveInfo;
@@ -72,8 +76,10 @@ public class UIControl : MonoBehaviour
 
         sellButton.gameObject.SetActive(false);
         if (upgradeButton) upgradeButton.gameObject.SetActive(false);
+        if (targetingButton) targetingButton.gameObject.SetActive(false);
 
         sellButton.onClick.AddListener(OnSellButtonClicked);
+        if (targetingButton) targetingButton.onClick.AddListener(OnTargetingButtonClicked);
     }
 
     private void UpdateWaveInfo(int currentWave) { waveInfo.text = $"Wave = {currentWave + 1}"; }
@@ -113,11 +119,18 @@ public class UIControl : MonoBehaviour
                 upgradeButton.gameObject.SetActive(true);
                 UpdateUpgradeButtonState();
             }
+
+            if (targetingButton)
+            {
+                targetingButton.gameObject.SetActive(true);
+                UpdateTargetingButtonState();
+            }
         }
         else
         {
             sellButton.gameObject.SetActive(false);
             if (upgradeButton) upgradeButton.gameObject.SetActive(false);
+            if (targetingButton) targetingButton.gameObject.SetActive(false);
 
             cardsContainer.gameObject.SetActive(true);
             PopulateTowerCards();
@@ -146,7 +159,7 @@ public class UIControl : MonoBehaviour
         }
     }
 
-    // Temizlenmi� Upgrade Fonksiyonu
+    // Temizlenmi� Upgrade Fonksiyonu
     public void OnUpgradeButtonClicked()
     {
         if (_currentPlatform != null && _currentPlatform.BuiltTower != null)
@@ -166,6 +179,33 @@ public class UIControl : MonoBehaviour
         {
             _currentPlatform.SellTower();
             HideSidePanel();
+        }
+    }
+
+    // Hedefleme butonu state güncelleme
+    private void UpdateTargetingButtonState()
+    {
+        if (_currentPlatform != null && _currentPlatform.BuiltTower != null)
+        {
+            Tower tower = _currentPlatform.BuiltTower.GetComponent<Tower>();
+            if (tower != null && targetingButtonText != null)
+            {
+                targetingButtonText.text = $"NİŞAN\n{tower.GetTargetingModeName()}";
+            }
+        }
+    }
+
+    // Hedefleme butonu tıklama
+    public void OnTargetingButtonClicked()
+    {
+        if (_currentPlatform != null && _currentPlatform.BuiltTower != null)
+        {
+            Tower tower = _currentPlatform.BuiltTower.GetComponent<Tower>();
+            if (tower != null)
+            {
+                tower.CycleTargetingMode();
+                UpdateTargetingButtonState();
+            }
         }
     }
 

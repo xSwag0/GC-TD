@@ -14,12 +14,17 @@ public class Mob : MonoBehaviour
 
     private Vector3 _targetPosition;
     private int _currentWaypoint;
+
     [Header("Enemy hp value")]
     [SerializeField] private float _hp;
-    private float _maxHp;
+    public float CurrentHP => _hp; // Yeni özellik: Canı dışarıdan okumak için
+
+    private float _maxHP;
+    public float MaxHP => _maxHP; // Yeni özellik: Maksimum canı dışarıdan okumak için
 
     [Header("Health Bar")]
-    [SerializeField] private Image healthBarFill;
+    // Eski "Image healthBarFill" yerine yeni script yapısını kullanıyoruz
+    [SerializeField] private EnemyHealthBar healthBar;
 
     private bool _isGone = false;
 
@@ -35,32 +40,29 @@ public class Mob : MonoBehaviour
 
     private void OnEnable()
     {
-        // Can eşitleme kodunu buradan kaldırdık.
-        // _hp = enemyData.hp;  <-- SİLİNEN SATIR
-
-        if (_currentPath != null) // Hata almamak için kontrol
+        if (_currentPath != null)
         {
             _currentWaypoint = 0;
             _targetPosition = _currentPath.GetWaypointPosition(_currentWaypoint);
         }
     }
 
-    // ... Update ve TakeDamage kısımları aynı kalacak ...
-
-    // Initialize fonksiyonu Spawner tarafından çağrıldığı için canı burada belirliyoruz
     public void Initialize(float hpMultiplier)
     {
         _isGone = false;
 
-        // Can değeri burada hesaplanıyor ve OnEnable bunu ezmiyor
-        _maxHp = enemyData.hp * hpMultiplier;
-        _hp = _maxHp;
+        // Yeni değişken isimlerini (_maxHP) kullanıyoruz
+        _maxHP = enemyData.hp * hpMultiplier;
+        _hp = _maxHP;
 
-        // Health bar'ı full yap
-        UpdateHealthBar();
+        // Yeni HealthBar scriptini başlatıyoruz
+        if (healthBar != null)
+        {
+            healthBar.Initialize(_maxHP);
+            healthBar.Show();
+        }
     }
 
-    // Update ve TakeDamage fonksiyonlarını olduğu gibi koruyabilirsin.
     void Update()
     {
         if (_isGone || _currentPath == null) return;
@@ -94,22 +96,20 @@ public class Mob : MonoBehaviour
         _hp -= damage;
         _hp = Mathf.Max(_hp, 0);
 
-        // Health bar'ı güncelle
-        UpdateHealthBar();
+        // Eski UpdateHealthBar() yerine yeni sistemin metodunu çağırıyoruz
+        if (healthBar != null)
+        {
+            healthBar.UpdateHealth(_hp);
+        }
 
         if (_hp <= 0)
         {
             _isGone = true;
+            if (healthBar != null) healthBar.Hide();
             OnDeath?.Invoke(this);
             gameObject.SetActive(false);
         }
     }
 
-    private void UpdateHealthBar()
-    {
-        if (healthBarFill != null && _maxHp > 0)
-        {
-            healthBarFill.fillAmount = _hp / _maxHp;
-        }
-    }
+    // Eski 'UpdateHealthBar' metodunu sildik çünkü artık 'EnemyHealthBar' scripti bu işi yapıyor.
 }

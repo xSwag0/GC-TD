@@ -1,12 +1,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum TargetingMode
+{
+    First,      // Ä°lk giren dÃ¼ÅŸman
+    Closest,    // En yakÄ±n dÃ¼ÅŸman
+    LowestHP,   // En az canlÄ± dÃ¼ÅŸman
+    HighestHP,  // En Ã§ok canlÄ± dÃ¼ÅŸman
+    Last        // Son giren dÃ¼ÅŸman
+}
+
 public class Tower : MonoBehaviour
 {
     [SerializeField] private TowerData data;
 
-    [Header("Görsel Ayarlar")]
+    [Header("GÃ¶rsel Ayarlar")]
     [SerializeField] private float rotationSpeed = 25f;
+
+    [Header("Hedefleme")]
+    public TargetingMode targetingMode = TargetingMode.First;
 
     private CircleCollider2D _circleCollider;
     private List<Mob> _enemiesInRange;
@@ -30,7 +42,7 @@ public class Tower : MonoBehaviour
         _levelSystem = GetComponent<TowerLevelSystem>();
         _circleCollider = GetComponent<CircleCollider2D>();
 
-        // TowerLevelSystem Awake'te çalýþtýðý için veriler burada hazýrdýr
+        // TowerLevelSystem Awake'te ï¿½alï¿½ï¿½tï¿½ï¿½ï¿½ iï¿½in veriler burada hazï¿½rdï¿½r
         float initialRange = _levelSystem ? _levelSystem.currentRange : data.range;
         _circleCollider.radius = initialRange;
 
@@ -42,11 +54,11 @@ public class Tower : MonoBehaviour
 
     private void Update()
     {
-        // Menzil güncelleme kodu yok, çünkü menzil deðiþmiyor.
+        Mob target = GetTarget();
 
-        if (_enemiesInRange.Count > 0 && _enemiesInRange[0] != null)
+        if (target != null)
         {
-            RotateTowardsTarget();
+            RotateTowardsTarget(target);
         }
 
         _shootTimer -= Time.deltaTime;
@@ -58,9 +70,9 @@ public class Tower : MonoBehaviour
         }
     }
 
-    private void RotateTowardsTarget()
+    private void RotateTowardsTarget(Mob target)
     {
-        Vector3 direction = _enemiesInRange[0].transform.position - transform.position;
+        Vector3 direction = target.transform.position - transform.position;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
         Quaternion targetRotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
@@ -94,7 +106,8 @@ public class Tower : MonoBehaviour
 
     private void Shoot()
     {
-        if (_enemiesInRange.Count > 0 && _enemiesInRange[0] != null)
+        Mob target = GetTarget();
+        if (target != null)
         {
             GameObject projectileObj = _projectilePool.GetObjectFromPool();
             projectileObj.transform.position = transform.position;
@@ -113,6 +126,85 @@ public class Tower : MonoBehaviour
         if (_enemiesInRange.Contains(mob))
         {
             _enemiesInRange.Remove(mob);
+        }
+    }
+
+    // Hedefleme moduna gÃ¶re en uygun dÃ¼ÅŸmanÄ± seÃ§
+    private Mob GetTarget()
+    {
+        if (_enemiesInRange.Count == 0) return null;
+
+        // Null olanlarÄ± temizle
+        _enemiesInRange.RemoveAll(m => m == null || !m.gameObject.activeInHierarchy);
+        if (_enemiesInRange.Count == 0) return null;
+
+        switch (targetingMode)
+        {
+            case TargetingMode.First:
+                return _enemiesInRange[0];
+
+            case TargetingMode.Last:
+                return _enemiesInRange[_enemiesInRange.Count - 1];
+
+            case TargetingMode.Closest:
+                Mob closest = _enemiesInRange[0];
+                float closestDist = Vector3.Distance(transform.position, closest.transform.position);
+                foreach (var mob in _enemiesInRange)
+                {
+                    float dist = Vector3.Distance(transform.position, mob.transform.position);
+                    if (dist < closestDist)
+                    {
+                        closestDist = dist;
+                        closest = mob;
+                    }
+                }
+                return closest;
+
+            case TargetingMode.LowestHP:
+                Mob lowestHP = _enemiesInRange[0];
+                foreach (var mob in _enemiesInRange)
+                {
+                    if (mob.CurrentHP < lowestHP.CurrentHP)
+                    {
+                        lowestHP = mob;
+                    }
+                }
+                return lowestHP;
+
+            case TargetingMode.HighestHP:
+                Mob highestHP = _enemiesInRange[0];
+                foreach (var mob in _enemiesInRange)
+                {
+                    if (mob.CurrentHP > highestHP.CurrentHP)
+                    {
+                        highestHP = mob;
+                    }
+                }
+                return highestHP;
+
+            default:
+                return _enemiesInRange[0];
+        }
+    }
+
+    // Hedefleme modunu deÄŸiÅŸtir (UI iÃ§in)
+    public void CycleTargetingMode()
+    {
+        int nextMode = ((int)targetingMode + 1) % 5;
+        targetingMode = (TargetingMode)nextMode;
+    }
+
+    // Hedefleme modu ismini al (UI iÃ§in)
+    public string GetTargetingModeName()
+    {
+        switch (targetingMode)
+        {
+            case TargetingMode.First: return "Ä°LK";
+            case TargetingMode.Last: return "SON";
+            case TargetingMode.Closest: return "YAKIN";
+            case TargetingMode.LowestHP: return "AZ CAN";
+            case TargetingMode.HighestHP: return "Ã‡OK CAN";
+            default: return "Ä°LK";
         }
     }
 }

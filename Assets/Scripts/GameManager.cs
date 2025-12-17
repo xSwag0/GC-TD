@@ -9,8 +9,8 @@ public class GameManager : MonoBehaviour
     public static event Action<int> OnResourcesChanged;
     public static event Action<int> OnScoreChanged;
     
-    private int _playerHP = 30;
-    private int _generalResources = 250;
+    private int _playerHP = 40;
+    private int _generalResources = 300;
     private int _score = 0;
     public int Resources => _generalResources;
     public int Score => _score;
