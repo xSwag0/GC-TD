@@ -172,12 +172,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerLevelSystem
   towerData: {fileID: 11400000, guid: db84f76d525be49809120414d4a695bf, type: 2}
   currentLevel: 1
-  maxLevel: 4
+  maxLevel: 8
   totalMoneySpent: 0
   currentDamage: 0
   currentShootInterval: 0
   currentRange: 0
-  baseUpgradeCost: 350
-  damageMultiplier: 1.2
+  baseUpgradeCost: 250
+  damageMultiplier: 1.25
   speedMultiplier: 0.9
   sellRefundRate: 0.5

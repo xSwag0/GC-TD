@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerData
   towerName: Archer
   range: 3
-  shootInterval: 0.75
+  shootInterval: 0.7
   projectileSpeed: 35
   projectileDuration: 2
   projectileSize: 1.6
-  damage: 4
+  damage: 6
   cost: 50
   sprite: {fileID: -7313812685113758616, guid: bee056f67215143ca9131746f2d501f1, type: 3}
   buildLimit: 0
