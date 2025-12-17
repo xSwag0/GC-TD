@@ -19,9 +19,8 @@ public class Spawner : MonoBehaviour
     private int _spawnedBreaches;
 
     private float _waitingTimer;
-    private float _cooldownTime = 3f;
+    private float _cooldownTime = 5f;
     private bool _isOnCooldown = false;
-    private int MultCounter = 0;
 
     [Header("Enemy Pools")]
     [SerializeField] private ObjectPooler goblinPool;
@@ -105,11 +104,12 @@ public class Spawner : MonoBehaviour
     private void GenerateNextWave()
     {
         _currentWaveData = ScriptableObject.CreateInstance<WaveData>();
-        
-        MultCounter = MultCounter + _waveCounter;
-        int totalEnemyCount = 10 + (MultCounter * 3);
+
+        // Linear düşman artışı, max 60 cap
+        int totalEnemyCount = Mathf.Min(60, 10 + (_waveCounter * 3));
         _currentWaveData.enemyCount = totalEnemyCount;
-        _currentWaveData.spawnInterval = Mathf.Max(0.2f, 1.5f - (_waveCounter * 0.05f));
+        // Spawn interval minimum 0.3s (daha rahat oynanış)
+        _currentWaveData.spawnInterval = Mathf.Max(0.3f, 1.5f - (_waveCounter * 0.04f));
         
         _currentWaveEnemies.Clear(); 
         List<EnemyType> availableTypes = new List<EnemyType>(_poolDictionary.Keys);
@@ -135,14 +135,16 @@ public class Spawner : MonoBehaviour
                 GameObject spawnedObject = currentPool.GetObjectFromPool();
                 spawnedObject.transform.position = transform.position;
 
-                float hpMultiplier = 0;
+                // Dengelenmiş HP artışı
+                float hpMultiplier;
                 if(_waveCounter <= 14)
                 {
                     hpMultiplier = 1f + (_waveCounter * 0.4f);
                 }
                 else
                 {
-                    hpMultiplier = 1f + (_waveCounter * 1.3f);
+                    // Wave 15+ için daha yumuşak artış (1.3 -> 0.7)
+                    hpMultiplier = 1f + (_waveCounter * 0.7f);
                 }
                     Mob mob = spawnedObject.GetComponent<Mob>();
                 if (mob != null) mob.Initialize(hpMultiplier);
