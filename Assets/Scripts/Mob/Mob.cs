@@ -16,6 +16,11 @@ public class Mob : MonoBehaviour
     [Header("Enemy hp value")]
     [SerializeField] private float _hp;
     public float CurrentHP => _hp;
+    private float _maxHP;
+    public float MaxHP => _maxHP;
+
+    [Header("Health Bar")]
+    [SerializeField] private EnemyHealthBar healthBar;
 
     private bool _isGone = false;
 
@@ -49,7 +54,15 @@ public class Mob : MonoBehaviour
         _isGone = false;
 
         // Can değeri burada hesaplanıyor ve OnEnable bunu ezmiyor
-        _hp = enemyData.hp * hpMultiplier;
+        _maxHP = enemyData.hp * hpMultiplier;
+        _hp = _maxHP;
+
+        // Health bar'ı initialize et
+        if (healthBar != null)
+        {
+            healthBar.Initialize(_maxHP);
+            healthBar.Show();
+        }
     }
 
     // Update ve TakeDamage fonksiyonlarını olduğu gibi koruyabilirsin.
@@ -86,9 +99,16 @@ public class Mob : MonoBehaviour
         _hp -= damage;
         _hp = Mathf.Max(_hp, 0);
 
+        // Health bar'ı güncelle
+        if (healthBar != null)
+        {
+            healthBar.UpdateHealth(_hp);
+        }
+
         if (_hp <= 0)
         {
             _isGone = true;
+            if (healthBar != null) healthBar.Hide();
             OnDeath?.Invoke(this);
             gameObject.SetActive(false);
         }
