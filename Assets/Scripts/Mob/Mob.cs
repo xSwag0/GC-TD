@@ -15,6 +15,7 @@ public class Mob : MonoBehaviour
     private int _currentWaypoint;
     [Header("Enemy hp value")]
     [SerializeField] private float _hp;
+    public float CurrentHP => _hp;
 
     private bool _isGone = false;
 
